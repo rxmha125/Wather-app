@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(109, 221, 237, 0.8), rgba(33, 147, 176, 0.8)),
+            url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHdlYXRoZXJ8ZW58MHx8fHwxNjg5MjI3NzQ1&ixlib=rb-1.2.1&q=80&w=1920') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .weather-app {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 360px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #007BFF;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .search {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search input {
+            padding: 12px;
+            width: 170px;
+            border: 2px solid #007BFF;
+            border-radius: 30px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .search input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+        }
+        .search button {
+            padding: 12px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .search button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .weather-info {
+            margin-top: 20px;
+            animation: slideIn 0.5s;
+            text-align: left;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .weather-info h2 {
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: #333;
+        }
+        .weather-info p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+        .weather-info p span {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .weather-icon {
+            width: 90px;
+            margin-top: 10px;
+        }
+        #day-night {
+            font-size: 16px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+        .forecast {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .forecast-day {
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .search-history {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+        }
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(33, 33, 33, 0.9));
+            color: #f0f0f0;
+        }
+        .weather-app.dark-mode {
+            background: rgba(50, 50, 50, 0.9);
+            box-shadow: 0 4px 30px rgba(255, 255, 255, 0.3);
+        }
+        .weather-info.dark-mode h2,
+        .weather-info.dark-mode p,
+        #day-night.dark-mode {
+            color: #f0f0f0;
+        }
+        .search input.dark-mode {
+            border-color: #f0f0f0;
+            background-color: #333;
+            color: #fff;
+        }
+        .search button.dark-mode {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        @media (max-width: 400px) {
+            .weather-app {
+                width: 90%;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .weather-info h2 {
+                font-size: 20px;
+            }
+            .weather-icon {
+                width: 70px;
+            }
+            .search {
+                flex-direction: column;
+            }
+            .search button {
+                margin: 5px 0;
+            }
+            .search input {
+                width: 100%;
+            }
+        }
+        #loading-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-spinner">Loading...</div>
+    <div class="weather-app">
+        <h1>Weather App</h1>
+        <div class="search">
+            <input type="text" id="city-input" placeholder="Enter city">
+            <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+            <button id="current-location-btn">Use Current Location</button>
+            <button id="unit-toggle">°C/°F</button>
+           <button id="dark-mode-toggle">Dark Mode</button> <!-- Dark Mode Toggle Button -->
+        </div>
+        <div class="weather-info">
+            <h2 id="city-name"></h2>
+            <img id="weather-icon" class="weather-icon" src="" alt="Weather Icon" style="display: none;">
+            <p id="temp"></p>
+            <p id="description"></p>
+            <p id="humidity"></p>
+            <p id="wind"></p>
+            <p id="day-night"></p>
+            <div class="forecast" id="forecast"></div> <!-- Forecast section -->
+            <div class="search-history" id="search-history"></div> <!-- Search history section -->
+        </div>
+    </div>
+    <script>
+        const apiKey = 'f859e86f6183ffda99e0935e356a15ec'; // Your API key here
+        let unit = 'metric'; // Default to metric
+        let darkMode = false;
+
+        document.getElementById('search-btn').addEventListener('click', () => {
+            const city = document.getElementById('city-input').value;
+            if (city) {
+                getWeather(city);
+                saveSearch(city);
+            } else {
+                alert('Please enter a city');
+            }
+        });
+
+        document.getElementById('current-location-btn').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const { latitude, longitude } = position.coords;
+                    getWeatherByCoordinates(latitude, longitude);
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        document.getElementById('unit-toggle').addEventListener('click', () => {
+            unit = unit === 'metric' ? 'imperial' : 'metric';
+            const city = document.getElementById('city-name').innerText;
+            if (city) {
+                getWeather(city);
+            }
+        });
+
+        document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            document.querySelector('.weather-app').classList.toggle('dark-mode', darkMode);
+            document.querySelectorAll('.weather-info p').forEach(p => p.classList.toggle('dark-mode', darkMode));
+        });
+
+        function showLoading() {
+            document.getElementById('loading-spinner').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-spinner').style.display = 'none';
+        }
+
+        function getWeather(city) {
+            showLoading();
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unit}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                    hideLoading();
+                })
+                .catch(error => {
+                    alert('Failed to fetch weather data');
+                    hideLoading();
+                });
+        }
+
+        function getWeatherByCoordinates(latitude, longitude) {
+            showLoading();
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${unit}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                    hideLoading();
+                })
+                .catch(error => {
+                    alert('Failed to fetch weather data');
+                    hideLoading();
+                });
+        }
+
+        function displayWeather(data) {
+            const cityName = document.getElementById('city-name');
+            const temp = document.getElementById('temp');
+            const description = document.getElementById('description');
+            const humidity = document.getElementById('humidity');
+            const wind = document.getElementById('wind');
+            const dayNight = document.getElementById('day-night');
+            const weatherIcon = document.getElementById('weather-icon');
+
+            cityName.innerText = data.name;
+            temp.innerText = `Temperature: ${data.main.temp} °${unit === 'metric' ? 'C' : 'F'}`;
+            description.innerText = `Description: ${data.weather[0].description}`;
+            humidity.innerText = `Humidity: ${data.main.humidity}%`;
+            wind.innerText = `Wind Speed: ${data.wind.speed} ${unit === 'metric' ? 'm/s' : 'mph'}`;
+            dayNight.innerText = data.dt > data.sys.sunset ? 'Night' : 'Day';
+            weatherIcon.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+            weatherIcon.style.display = 'block';
+        }
+
+        function saveSearch(city) {
+            let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            history.push(city);
+            if (history.length > 5) history.shift();
+            localStorage.setItem('searchHistory', JSON.stringify(history));
+            displaySearchHistory();
+        }
+
+        function displaySearchHistory() {
+            const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            const historyDiv = document.getElementById('search-history');
+            historyDiv.innerHTML = '';
+            searchHistory.forEach(city => {
+                const p = document.createElement('p');
+                p.innerText = city;
+                p.addEventListener('click', () => getWeather(city));
+                historyDiv.appendChild(p);
+            });
+        }
+
+        displaySearchHistory(); // Initialize with saved search history
+    </script>
+</body>
+</html>
