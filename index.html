@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, rgba(109, 221, 237, 0.8), rgba(33, 147, 176, 0.8)),
-            url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHdlYXRoZXJ8ZW58MHx8fHwxNjg5MjI3NzQ1&ixlib=rb-1.2.1&q=80&w=1920') no-repeat center center fixed;
+            url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHdlYXRoZXx8MHx8fHwxNjg5MjI3NzQ1&ixlib=rb-1.2.1&q=80&w=1920') no-repeat center center fixed;
             background-size: cover;
             color: #fff;
             display: flex;
@@ -196,18 +196,32 @@
             font-weight: bold;
             color: #007BFF;
         }
+        /* Clock Styles */
+        #clock {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
     <div id="loading-spinner">Loading...</div>
+    <div id="clock"></div> <!-- Clock Element -->
     <div class="weather-app">
         <h1>Weather App</h1>
         <div class="search">
             <input type="text" id="city-input" placeholder="Enter city">
-            <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
             <button id="current-location-btn">Use Current Location</button>
             <button id="unit-toggle">°C/°F</button>
-           <button id="dark-mode-toggle">Dark Mode</button> <!-- Dark Mode Toggle Button -->
+            <button id="dark-mode-toggle">Dark Mode</button> <!-- Dark Mode Toggle Button -->
         </div>
         <div class="weather-info">
             <h2 id="city-name"></h2>
@@ -223,7 +237,7 @@
     </div>
     <script>
         const apiKey = 'f859e86f6183ffda99e0935e356a15ec'; // Your API key here
-        let unit = 'metric'; // Default to metric
+        let unit = 'metric';
         let darkMode = false;
 
         document.getElementById('search-btn').addEventListener('click', () => {
@@ -231,8 +245,6 @@
             if (city) {
                 getWeather(city);
                 saveSearch(city);
-            } else {
-                alert('Please enter a city');
             }
         });
 
@@ -338,6 +350,38 @@
         }
 
         displaySearchHistory(); // Initialize with saved search history
+
+        // Clock functionality
+        function updateClock() {
+            const clockElement = document.getElementById('clock');
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            clockElement.innerText = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateClock, 1000); // Update the clock every second
+        updateClock(); // Initial call to set the clock immediately
+        function updateClock() {
+    const clockElement = document.getElementById('clock');
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    
+    // Determine A.M. or P.M.
+    const amPm = hours >= 12 ? 'P.M.' : 'A.M.';
+    
+    // Convert 24-hour time to 12-hour format
+    hours = hours % 12 || 12;
+    
+    clockElement.innerText = `${hours}:${minutes}:${seconds} ${amPm}`;
+}
+
+setInterval(updateClock, 1000); // Update the clock every second
+updateClock(); // Initial call to set the clock immediately
+
     </script>
 </body>
 </html>
